@@ -1,0 +1,9 @@
+data/
+*.pth
+*.npy
+*.zip
+*.tar.gz
+__pycache__/
+.env/
+*.pyc
+results/*.png
