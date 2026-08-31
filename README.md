@@ -24,11 +24,13 @@ Stimulated Raman Scattering (SRS) microscopy images of human colon cell lines.
 |---|---|---|---|---|
 | ResNet50 pretrained 12ch protein_max | Primary 2026 | Session-based | 77.32% | 0.793 |
 | ResNet50 pretrained 12ch protein_max | Primary 2026 | Random upper bound | 98.56% | 0.984 |
-| ResNet50 pretrained 75px border | Secondary 2025 | Acquisition-based | 92.86% | 0.943 |
+| ResNet50 pretrained 75px border | Secondary 2025 | Acquisition-based | 92.86% | 0.930 |
 | ResNet50 + GroupNorm | Primary 2026 | Session-based | 66.01% | 0.666 |
 | ResNet50 + SCL | Primary 2026 | Session-based | 73.17% | 0.714 |
 | ResNet50 + DANN | Primary 2026 | Session-based | 31.88% | 0.307 |
 | ResNet50 + LoRA | Primary 2026 | Session-based | 40.02% | 0.444 |
+
+Primary dataset figures are means across three independent runs.
 
 ---
 
@@ -44,7 +46,6 @@ Stimulated Raman Scattering (SRS) microscopy images of human colon cell lines.
 - notebooks/01_data_exploration.ipynb: Dataset exploration and visualisation
 - notebooks/02_cell_extraction.ipynb: Cell extraction pipeline
 - notebooks/03_normalisation_investigation.ipynb: Normalisation strategy comparison
-- experiments/: Exploratory scripts used during development
 
 ---
 
@@ -67,7 +68,8 @@ Tested with Python 3.9, PyTorch 2.5.1, CUDA 12.x on NVIDIA A100.
 
 ## Reproducing Results
 
-All scripts use a fixed random seed of 42 and report mean +/- std across 3 runs.
+All scripts use a fixed base random seed of 42, incremented per run, and report
+mean +/- std across 3 runs.
 
 Primary dataset best model (77.32%):
 python train_primary_best.py
@@ -76,6 +78,12 @@ Secondary dataset (92.86%):
 python train_secondary_best.py
 
 Update the SCRATCH and DATA_ROOT variables at the top of each script for your environment.
+
+Note: the session-mean scaling factors in train_primary_best.py are computed from
+per-session mean intensities across all sessions, including the held-out test
+session. The pipeline is therefore transductive with respect to session intensity
+calibration, though no class labels are used. See the dissertation Limitations
+section for discussion.
 
 ---
 
